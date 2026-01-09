@@ -17,18 +17,18 @@ client_load_page_ranked AS (
         user_id,
         action,
         time_format,
-        timestamp as page_load_timestamp,
-        DENSE_RANK() OVER (PARTITION BY user_id, DATE(timestamp) ORDER BY time_format DESC) as ranked
+        date,
+        DENSE_RANK() OVER (PARTITION BY user_id, date ORDER BY time_format DESC) as ranked
     FROM base_table
-    WHERE action = 'page_load'
-),
+    WHERE action = 'page_load'),
 
 -- Get each clients earliest exit for each day
 client_exit_page_ranked AS (
     SELECT
         user_id,
         action,
-        timestamp as page_exit_timestamp,
+        time_format,
+        date,
         DENSE_RANK() OVER (PARTITION BY user_id, DATE(timestamp) ORDER BY time_format ) as ranked
     FROM base_table
     WHERE action = 'page_exit'
@@ -38,28 +38,43 @@ client_exit_page_ranked AS (
 filtered_exit_page AS (
     SELECT
         user_id,
-        page_exit_timestamp
+        date,
+        time_format as time_format_exit
+        --page_exit_timestamp
     FROM client_exit_page_ranked
     WHERE ranked = 1
-    GROUP BY user_id, page_exit_timestamp
 ),
 
 filtered_load_page AS (
     SELECT
         user_id,
-        page_load_timestamp
+        date,
+        time_format as time_format_load
+        --page_load_timestamp
     FROM client_load_page_ranked
     WHERE ranked = 1
-    GROUP BY user_id, page_load_timestamp
-)
+),
 
 
--- Calculate the average for each client: Issue is that join is not for each day at this point
-SELECT
+-- Calculate session duration
+session_duration_table AS (
+  SELECT
     a.user_id,
-    a.page_load_timestamp,
-    b.page_exit_timestamp
+    a.date,
+    a.time_format_load,
+    b.time_format_exit,
+    EXTRACT(EPOCH FROM (b.time_format_exit::TIME - a.time_format_load::TIME))::INTEGER as session_duration
 FROM
     filtered_load_page a
-LEFT JOIN filtered_exit_page b ON a.user_id = b.user_id
-WHERE b.page_exit_timestamp IS NOT NULL;
+LEFT JOIN filtered_exit_page b ON a.user_id = b.user_id AND a.date = b.date
+WHERE b.time_format_exit IS NOT NULL
+)
+
+-- Get average session duration for each user_id
+SELECT
+    user_id,
+    AVG(session_duration) as avg_session_duration
+FROM
+    session_duration_table
+GROUP BY
+    user_id;
