@@ -1,6 +1,6 @@
 --Link: https://platform.stratascratch.com/coding/10351-activity-rank?code_type=1
 
---Count emails sents for each user
+--Count emails sent by each user
 WITH email_sent_table AS(
     SELECT
         from_user as user_id,
