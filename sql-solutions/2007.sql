@@ -8,7 +8,7 @@ WITH country_comments_dec AS (
         DENSE_RANK() OVER (ORDER BY SUM(c.number_of_comments) DESC) as dec_rank
     FROM
         fb_comments_count c
-    LEFT JOIN fb_active_users a ON c.user_id = a.user_id
+    INNER JOIN fb_active_users a ON c.user_id = a.user_id
     WHERE c.created_at BETWEEN '2019-12-01' AND '2019-12-31'
     GROUP BY a.country
     ),
@@ -20,16 +20,14 @@ country_comments_jan AS (
         DENSE_RANK() OVER (ORDER BY SUM(c.number_of_comments) DESC) as jan_rank
     FROM
         fb_comments_count c
-    LEFT JOIN fb_active_users a ON c.user_id = a.user_id
+    INNER JOIN fb_active_users a ON c.user_id = a.user_id
     WHERE c.created_at BETWEEN '2020-01-01' AND '2020-01-31'
     GROUP BY a.country
     )
 
 -- Join both tables to compare the rank
 SELECT
-    j.country,
-    d.dec_rank,
-    j.jan_rank
+    j.country
 FROM
     country_comments_dec d
 INNER JOIN
