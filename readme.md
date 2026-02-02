@@ -10,7 +10,7 @@ What actually happened? I got hooked on solving real problems on [StrataScratch]
 
 ## What You'll Find Here
 
-This repository is now a collection of **22 SQL solutions** I've worked through on StrataScratch. These aren't just textbook examples - they're real interview questions from companies like Facebook, Apple, Amazon, and more.
+This repository is now a collection of **30+ SQL solutions** I've worked through on StrataScratch. These aren't just textbook examples - they're real interview questions from companies like Facebook, Apple, Amazon, and more.
 
 ### The Solutions
 
@@ -21,7 +21,7 @@ All solutions are in the `sql-solutions/` folder, with each file named after the
 
 ### The Original Vision
 
-You'll still find a couple of pattern folders (`pattern-1`, `pattern-2`) from my initial attempt. They're staying here as a reminder of where this started - and maybe one day I'll circle back and properly categorize everything I've learned.
+You'll still find a couple of pattern folders (`pattern-1`, `pattern-2`) from my initial attempt. They're staying here as a reminder of where this started - and maybe one day I'll circle back and properly categorise everything I've learned.
 
 ## Why This Matters
 
@@ -31,4 +31,4 @@ So if you're here to learn SQL, don't just read the code. Go to StrataScratch, t
 
 ---
 
-*Started as a quest for 25 patterns. Ended up with 22 real solutions. Still learning.*
+*Started as a quest for 25 patterns. Ended up with 30+ real solutions. Still learning.*
